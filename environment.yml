@@ -1,4 +1,7 @@
 name: mfm
+channels:
+  - conda-forge
+  - defaults
 dependencies:
   - pandas
   - jupyter
@@ -19,3 +22,7 @@ dependencies:
   - pip
   - pip:
     - wfdb
+    - pqdm
+    - nbstripout
+    - ipdb
+    - fire
