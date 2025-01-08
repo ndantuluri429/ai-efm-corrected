@@ -1,0 +1,164 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2759
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\fswiss\fcharset0 Helvetica-Oblique;
+\f3\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue233;\red251\green2\blue7;
+\red103\green107\blue114;\red0\green0\blue0;\red195\green123\blue90;\red174\green176\blue183;\red89\green158\blue96;
+\red160\green0\blue163;\red23\green23\blue26;\red71\green149\blue242;\red38\green157\blue169;\red152\green54\blue29;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c0\c0\c93333;\cssrgb\c100000\c14913\c0;
+\csgenericrgb\c40392\c41961\c44706;\csgray\c0\c0;\csgenericrgb\c76471\c48235\c35294;\csgenericrgb\c68235\c69020\c71765;\csgenericrgb\c34902\c61961\c37647;
+\csgenericrgb\c62745\c0\c63922;\csgenericrgb\c9020\c9020\c10196;\csgenericrgb\c27843\c58431\c94902;\csgenericrgb\c14902\c61569\c66275;\csgenericrgb\c59608\c21176\c11373;
+}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 \
+
+\fs28 Overview
+\f1\b0 :\
+\pard\pardeftab720\partightenfactor0
+
+\fs26 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Before running the models, you need to prepare the CTU-UHB database as a workable dataset. You can access the data from the following link: {\field{\*\fldinst{HYPERLINK "https://physionet.org/content/ctu-uhb-ctgdb/1.0.0/"}}{\fldrslt \cf3 \ul \ulc3 \strokec3 https://physionet.org/content/ctu-uhb-ctgdb/1.0.0/}}. The dataset is provided as a zip file containing .dat and .hea files, which include the signal data and summary notes for each record. These signals must be merged, made viewable, and converted into a CSV file in order to prepare the data for further analysis.
+\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f1\b0 \cf0 \
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+\
+
+\f0\b\fs28 General pipeline:
+\f1\b0 \
+
+\fs26 1. Indicate the path to the downloaded physionet files. Save as \'93ctu-chb-raw-data\'94 in your repository.\
+2. Create the following files: ctu-raw-to-csv.py & CTU-merge-signals.py\
+3. Navigate to correct directory\
+4. Make sure to activate conda environment and that all dependencies are loaded. \
+5. Run all of the scripts from part 2. \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b\fs28 \cf4 The below is \ul sample code\ulnone  used by a student to crate the merged CTU-UHB CSV file. Be sure to edit  the code so that your file path is correct. 
+\f2\i\b0 \cf0 \ul \ulc0 \
+
+\f1\i0\fs26 \ulnone \
+\
+
+\f0\b \ul Code for view_CTU.py \ulnone \
+
+\f2\i\b0 Note: This is not required, but is included so if you want to view the .dat files via matplotlib\
+
+\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\i0\fs26 \cf5 \cb6 # how to open files\
+# go to correct directory: cd /Users/nehadantuluri/PycharmProjects/ai-efm-2\
+# activate env: conda activate wfdb-env\
+# run script:python view_CTU.py\
+\cf7 import \cf8 wfdb\
+\cf5 # Use relative path to access the .dat and .hea files\
+\cf8 record = wfdb.rdrecord(\cf9 'ctu-chb-raw-data/1001'\cf8 )\
+\cf5 # Print details about the record\
+\cf8 print(record.\cf10 __dict__\cf8 )\
+\cf5 # Optionally, plot the signals to visualize the data\
+\cf8 wfdb.plot_wfdb(record)\cb11 \
+\cb6 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f1\fs24 \cf0 \
+
+\f0\b \ul Code for ctu-raw-to-csv:
+\f1\b0 \ulnone \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f3\fs26 \cf7 import \cf8 pandas \cf7 as \cf8 pd\
+\cf7 import \cf8 wfdb\
+\cf7 from \cf8 os \cf7 import \cf8 listdir\
+\cf7 from \cf8 tqdm \cf7 import \cf8 tqdm\
+\
+\cf5 # Define paths\
+\cf8 data_dir = \cf9 '/Users/nehadantuluri/PycharmProjects/ai-efm-2/ctu-chb-raw-data/'\
+\cf8 output_dir = \cf9 '/Users/nehadantuluri/PycharmProjects/ai-efm-2/preprocessing/CTU/'\
+\cf5 # get all records\
+\cf7 def \cf12 get_all_records\cf8 ():\
+    rec_list = []\
+    \cf7 for \cf8 file \cf7 in \cf8 listdir(data_dir):\
+        rec = file[:file.find(\cf9 '.'\cf8 )]\
+        \cf7 try\cf8 :\
+            rec = int(rec)\
+            rec_list.append(rec)\
+        \cf7 except\cf8 :\
+            \cf7 pass\
+    \cf8 rec_list = [str(i) \cf7 for \cf8 i \cf7 in \cf8 rec_list]\
+    \cf7 return \cf8 rec_list\
+\cf5 # create signals database\
+\cf7 def \cf12 create_signals_database\cf8 (rec):\
+    sample = wfdb.rdsamp(\cf9 f"\cf7 \{\cf8 data_dir\cf7 \}\{\cf8 rec\cf7 \}\cf9 "\cf8 )\
+    df = pd.DataFrame(sample[\cf13 0\cf8 ], \cf14 columns\cf8 =[\cf9 'FHR'\cf8 , \cf9 'UC'\cf8 ])\
+    df.index.name = \cf9 'seconds'\
+    \cf8 df[\cf9 'PID'\cf8 ] = rec[:\cf13 4\cf8 ]\
+    df.to_csv(\cf9 f'\cf7 \{\cf8 output_dir\cf7 \}\{\cf8 rec\cf7 \}\cf9 _signals.csv'\cf8 )\
+\cf5 # create annotation dataframe\
+\cf7 def \cf12 create_ann_dataframe\cf8 (rec):\
+    sample = wfdb.rdsamp(\cf9 f"\cf7 \{\cf8 data_dir\cf7 \}\{\cf8 rec\cf7 \}\cf9 "\cf8 )\
+    ann = sample[\cf13 1\cf8 ][\cf9 'comments'\cf8 ][\cf13 1\cf8 :]\
+    ann_dic = \{\}\
+    \cf7 for \cf8 a \cf7 in \cf8 ann:\
+        \cf7 if \cf9 '--' \cf7 in \cf8 a:\
+            ann.remove(a)\
+    \cf7 for \cf8 a \cf7 in \cf8 ann:\
+        key = a[:a.find(\cf9 '  '\cf8 )]\
+        \cf7 if \cf8 a.find(\cf9 '  '\cf8 ) == -\cf13 1\cf8 :\
+            key = a[:a.find(\cf9 ' '\cf8 )]\
+        inv = a[::-\cf13 1\cf8 ]\
+        value = inv[:inv.find(\cf9 ' '\cf8 )][::-\cf13 1\cf8 ]\
+        value = float(value)\
+        ann_dic[key] = [value]\
+\
+    df1 = pd.DataFrame.from_dict(ann_dic).T\
+    df1 = df1.rename(\cf14 columns\cf8 =\{\cf13 0\cf8 : rec\})\
+    \cf7 return \cf8 df1\
+\cf5 # append annotation dfs\
+\cf7 def \cf12 append_ann_dataframes\cf8 (df, df1):\
+    rec = df1.columns[\cf13 0\cf8 ]\
+    df[rec] = df1[rec]\
+    \cf7 return \cf8 df\
+# process records\cf5 \
+\cf8 df = pd.DataFrame()\
+\cf7 for \cf8 rec \cf7 in \cf8 tqdm(get_all_records()):\
+    create_signals_database(rec)\
+    df = append_ann_dataframes(df, create_ann_dataframe(rec))\
+df.to_csv(\cf9 f'\cf7 \{\cf8 output_dir\cf7 \}\cf9 ann_db.csv'\cf8 )\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 \cb6 \ul \ulc0 \
+Code for CTU-merge-signals-py:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f3\b0\fs26 \cf7 \cb6 \ulnone import \cf8 pandas \cf7 as \cf8 pd\
+\cf7 import \cf8 os\
+\cf5 # file path to individual CSV files\
+\cf8 csv_dir = \cf9 '/Users/nehadantuluri/PycharmProjects/ai-efm-2/preprocessing/CTU/'\
+\cf5 # list all CSV files \
+\cf8 csv_files = [f \cf7 for \cf8 f \cf7 in \cf8 os.listdir(csv_dir) \cf7 if \cf8 f.endswith(\cf9 '_signals.csv'\cf8 )]\
+\cf5 # create empty list to store DataFrames\
+\cf8 df_list = []\
+\cf5 # iterate over each CSV file\
+\cf7 for \cf8 file \cf7 in \cf8 csv_files:\cf5 \
+    \cf8 df = pd.read_csv(os.path.join(csv_dir, file))\
+    \cf5 # Extract record identifier from the filename (e.g., '1001_signals.csv' -> '1001')\
+    \cf8 record_id = file.split(\cf9 '_'\cf8 )[\cf13 0\cf8 ]\
+    \cf5 # Add a new column 'Record_ID' with the record identifier\
+    \cf8 df[\cf9 'Record_ID'\cf8 ] = record_id\
+    \cf5 # append df to the list\
+    \cf8 df_list.append(df)\
+\cf5 # concatenate all dfs in the list into one large DataFrame\
+\cf8 merged_df = pd.concat(df_list, \cf14 ignore_index\cf8 =\cf7 True\cf8 )\
+\cf5 # Save the merged DataFrame to a new CSV file\
+\cf8 merged_df.to_csv(\cf9 '/Users/nehadantuluri/PycharmProjects/ai-efm-2/preprocessing/CTU/merged_CTU_data.csv'\cf8 , \cf14 index\cf8 =\cf7 False\cf8 )\
+print(\cf9 "Merging completed! The merged file is saved as 'merged_CTU_data.csv'."\cf8 )\
+}
