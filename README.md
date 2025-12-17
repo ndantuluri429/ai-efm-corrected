@@ -11,7 +11,7 @@ Intrapartum electronic fetal heart rate monitoring to predict acidemia at birth 
 
 # Contributors
 
-- Developed by William La Cava (@lacava), Jennifer McCoy, and Corey Chivers
+- Developed by William La Cava ([@lacava](https://github.com/lacava)), Jennifer McCoy, and Corey Chivers
 - contact william.lacava@childrens.harvard.edu
 
 
