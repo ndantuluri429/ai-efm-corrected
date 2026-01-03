@@ -1,14 +1,12 @@
-version: '3'
-
 services:
   main:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        GID: 1000
+        GID: 501
     env_file: mfm.env
-    user: "mfm:1000"
+    user: "mfm:501"
     container_name: "mfm-${USER}"
     stdin_open: true
     tty: true
@@ -16,33 +14,11 @@ services:
       - ./:/tf/code
       - ./data:/tf/data
     network_mode: host
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-
-
-# IF YOU HAVE APPLE SILICON M1/M2, use the following code:
-# version: '3'
-
-#services:
-  #main:
-   # build:
-    # context: .
-     # dockerfile: Dockerfile
-     # args:
-       # GID: 1000
-    #env_file: mfm.env
-    #user: "mfm:1000"
-    #container_name: "mfm-${USER}"
-    #stdin_open: true
-    #tty: true
-    #volumes:
-     # - ./:/tf/code
-     # - ./data:/tf/data
-    #network_mode: host
-    #platform: linux/arm64
-    #deploy:
-     # resources:
-      # reservations: {}
+    platform: linux/arm64 # ONLY INCLUDE THIS LINE IF YOU HAVE APPLE SILICON M1/M2
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
